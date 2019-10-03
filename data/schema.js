@@ -1,16 +1,24 @@
 // How the data would look like.
 
 const schema = {
+  id: '123123123',
   image: "https://cdn.example.com/img/uuid.png",
   coordinates: {
     latitude: "00'00'00",
     longitude: "00'00'00"
   },
-  social: {
-    facebook: null,
-    twitter: null,
-    instagram: 'artist.handle'
-  },
+  authors: [
+    {
+      facebook: null,
+      twitter: null,
+      instagram: 'artist.handle'
+    },
+    {
+      facebook: 'second.artist',
+      twitter: 'they.also.have.twitter',
+      instagram: null
+    }
+  ],
   tags: [
     'type',
     'author',
