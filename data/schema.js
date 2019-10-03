@@ -6,11 +6,18 @@ const schema = {
     latitude: "00'00'00",
     longitude: "00'00'00"
   },
-  social: {
-    facebook: null,
-    twitter: null,
-    instagram: 'artist.handle'
-  },
+  authors: [
+    {
+      facebook: null,
+      twitter: null,
+      instagram: 'artist.handle'
+    },
+    {
+      facebook: 'second.artist',
+      twitter: 'they.also.have.twitter',
+      instagram: null
+    }
+  ],
   tags: [
     'type',
     'author',
