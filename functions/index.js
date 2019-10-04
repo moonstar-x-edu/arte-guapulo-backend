@@ -1,8 +1,8 @@
 const functions = require('firebase-functions');
 const express = require('express');
-const app = require('./src/api');
+const piece = require('./src/api');
 
 const main = express();
-main.use('/', app);
+main.use('/piece/', piece);
 
 exports.api = functions.https.onRequest(main);

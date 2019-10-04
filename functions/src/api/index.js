@@ -28,7 +28,7 @@ app.get('/meta', (req, res) => {
     });
 });
 
-app.get('/pieces', (req, res) => {
+app.get('/all', (req, res) => {
   piecesRef.get()
     .then((snapshot) => {
       const data = snapshot.docs.map((doc) => doc.data());
@@ -40,7 +40,7 @@ app.get('/pieces', (req, res) => {
     });
 });
 
-app.get('/piece/:id', (req, res) => {
+app.get('/:id', (req, res) => {
   const { id } = req.params;
 
   piecesRef.doc(id).get()
@@ -59,13 +59,13 @@ app.get('/piece/:id', (req, res) => {
     });
 });
 
-app.get('/piece', (req, res) => {
+app.get('/', (req, res) => {
   res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(
     'You need to specify an id parameter!'
   ));
 });
 
-app.post('/createPiece', (req, res) => {
+app.post('/create', (req, res) => {
   const { body } = req;
   const validation = pieceSchema.validate(body, { convert: false });
 
@@ -95,7 +95,7 @@ app.post('/createPiece', (req, res) => {
     });
 });
 
-app.delete('/deletePiece/:id', (req, res) => {
+app.delete('/delete/:id', (req, res) => {
   const { id } = req.params;
   const refToRemove = piecesRef.doc(id);
 
@@ -121,13 +121,25 @@ app.delete('/deletePiece/:id', (req, res) => {
     });
 });
 
-app.delete('/deletePiece', (req, res) => {
+app.delete('/delete', (req, res) => {
   res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(
     'You need to specify an id parameter!'
   ));
 });
 
 app.get('*', (_, res) => {
+  res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
+    'The requested resource was not found. Please check that the endpoint is written correctly.'
+  ));
+});
+
+app.post('*', (_, res) => {
+  res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
+    'The requested resource was not found. Please check that the endpoint is written correctly.'
+  ));
+});
+
+app.delete('*', (_, res) => {
   res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
     'The requested resource was not found. Please check that the endpoint is written correctly.'
   ));
