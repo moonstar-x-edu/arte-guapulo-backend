@@ -11,18 +11,31 @@ const PATH = {
 };
 
 const RESPONSES = {
-  NOT_FOUND: {
+  OK: (data) => ({
+    status: HTTP_CODES.OK,
+    success: true,
+    data
+  }),
+  CREATED: (data) => ({
+    status: HTTP_CODES.CREATED,
+    success: true,
+    data
+  }),
+  NOT_FOUND: (message) => ({
     status: HTTP_CODES.NOT_FOUND,
-    message: 'The requested resource was not found. Please check that the endpoint is written correctly.'
-  },
+    success: false,
+    message
+  }),
   INTERNAL_SERVER_ERROR: (error) => ({
     status: HTTP_CODES.INTERNAL_SERVER_ERROR,
+    success: false,
     message: 'Something went wrong when accessing the requested resource.',
     error
   }),
   BAD_REQUEST: (error) => ({
     status: HTTP_CODES.BAD_REQUEST,
-    message: 'Bad request.',
+    success: false,
+    message: "The server couldn't process your request.",
     error
   })
 };

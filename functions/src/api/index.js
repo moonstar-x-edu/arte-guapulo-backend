@@ -16,10 +16,12 @@ app.get('/meta', (req, res) => {
       const quantity = snapshot.docs.length;
       const ids = snapshot.docs.map((doc) => doc.data().id);
 
-      res.status(HTTP_CODES.OK).send({
+      const meta = {
         quantity,
         ids
-      });
+      };
+
+      res.status(HTTP_CODES.OK).send(RESPONSES.OK(meta));
     })
     .catch((error) => {
       res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
@@ -31,7 +33,7 @@ app.get('/pieces', (req, res) => {
     .then((snapshot) => {
       const data = snapshot.docs.map((doc) => doc.data());
 
-      res.status(HTTP_CODES.OK).send(data);
+      res.status(HTTP_CODES.OK).send(RESPONSES.OK(data));
     })
     .catch((error) => {
       res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
@@ -44,11 +46,13 @@ app.get('/piece/:id', (req, res) => {
   piecesRef.doc(id).get()
     .then((doc) => {
       if (!doc.exists) {
-        res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND);
+        res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
+          `Piece with id ${id} does not exist.`
+        ));
         return;
       }
 
-      res.status(HTTP_CODES.OK).send(doc.data());
+      res.status(HTTP_CODES.OK).send(RESPONSES.OK(doc.data()));
     })
     .catch((error) => {
       res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
@@ -56,7 +60,9 @@ app.get('/piece/:id', (req, res) => {
 });
 
 app.get('/piece', (req, res) => {
-  res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST('You need to specify an id parameter!'));
+  res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(
+    'You need to specify an id parameter!'
+  ));
 });
 
 app.post('/createPiece', (req, res) => {
@@ -73,7 +79,7 @@ app.post('/createPiece', (req, res) => {
 
   docRef.set({ ...body, id })
     .then((doc) => {
-      res.status(HTTP_CODES.CREATED).send(doc);
+      res.status(HTTP_CODES.CREATED).send(RESPONSES.CREATED(doc));
     })
     .catch((error) => {
       res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
@@ -81,7 +87,9 @@ app.post('/createPiece', (req, res) => {
 });
 
 app.get('*', (_, res) => {
-  res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND);
+  res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
+    'The requested resource was not found. Please check that the endpoint is written correctly.'
+  ));
 });
 
 module.exports = app;
