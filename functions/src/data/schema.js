@@ -2,12 +2,18 @@ const Joi = require('@hapi/joi');
 
 const schema = Joi.object({
   image: Joi.string()
+    .trim()
+    .uri()
     .required(),
   coordinates: Joi.object({
     latitude: Joi.number()
+      .min(-90)
+      .max(90)
       .required()
       .strict(),
     longitude: Joi.number()
+      .min(-180)
+      .max(180)
       .required()
       .strict()
   }).required(),

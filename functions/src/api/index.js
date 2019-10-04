@@ -61,7 +61,7 @@ app.get('/piece', (req, res) => {
 
 app.post('/createPiece', (req, res) => {
   const { body } = req;
-  const validation = pieceSchema.validate(body);
+  const validation = pieceSchema.validate(body, { convert: false });
 
   if (validation.error) {
     res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(validation.error));
