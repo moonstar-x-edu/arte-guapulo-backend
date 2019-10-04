@@ -10,12 +10,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const piecesRef = db.collection(PATH.PIECES);
 
+app.get('/meta', (req, res) => {
+  piecesRef.get()
+    .then((snapshot) => {
+      const quantity = snapshot.docs.length;
+      const ids = snapshot.docs.map((doc) => doc.data().id);
+
+      res.status(HTTP_CODES.OK).send({
+        quantity,
+        ids
+      });
+    })
+    .catch((error) => {
+      res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
+    });
+});
+
 app.get('/pieces', (req, res) => {
   piecesRef.get()
     .then((snapshot) => {
-      const data = snapshot.docs.map((doc) => {
-        return doc.data();
-      });
+      const data = snapshot.docs.map((doc) => doc.data());
+
       res.status(HTTP_CODES.OK).send(data);
     })
     .catch((error) => {
@@ -32,6 +47,7 @@ app.get('/piece/:id', (req, res) => {
         res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND);
         return;
       }
+
       res.status(HTTP_CODES.OK).send(doc.data());
     })
     .catch((error) => {
@@ -46,6 +62,7 @@ app.get('/piece', (req, res) => {
 app.post('/createPiece', (req, res) => {
   const { body } = req;
   const validation = pieceSchema.validate(body);
+
   if (validation.error) {
     res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(validation.error));
     return;
@@ -53,6 +70,7 @@ app.post('/createPiece', (req, res) => {
 
   const docRef = piecesRef.doc();
   const { id } = docRef;
+
   docRef.set({ ...body, id })
     .then((doc) => {
       res.status(HTTP_CODES.CREATED).send(doc);
