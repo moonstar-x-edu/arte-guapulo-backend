@@ -76,10 +76,19 @@ app.post('/createPiece', (req, res) => {
 
   const docRef = piecesRef.doc();
   const { id } = docRef;
+  const document = {
+    ...body,
+    id
+  };
 
-  docRef.set({ ...body, id })
-    .then((doc) => {
-      res.status(HTTP_CODES.CREATED).send(RESPONSES.CREATED(doc));
+  docRef.set(document)
+    .then((result) => {
+      const data = {
+        writeTime: result.writeTime.nanoseconds / 1e9,
+        document
+      };
+
+      res.status(HTTP_CODES.CREATED).send(RESPONSES.CREATED(data));
     })
     .catch((error) => {
       res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
