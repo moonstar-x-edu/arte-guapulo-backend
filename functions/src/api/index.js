@@ -95,6 +95,38 @@ app.post('/createPiece', (req, res) => {
     });
 });
 
+app.delete('/deletePiece/:id', (req, res) => {
+  const { id } = req.params;
+  const refToRemove = piecesRef.doc(id);
+
+  refToRemove.get()
+    .then((doc) => {
+      const removed = doc.data();
+
+      refToRemove.delete()
+        .then((result) => {
+          const data = {
+            writeTime: result.writeTime.nanoseconds / 1e9,
+            removed
+          };
+
+          res.status(HTTP_CODES.OK).send(RESPONSES.OK(data));
+        })
+        .catch((error) => {
+          res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
+        });
+    })
+    .catch((error) => {
+      res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
+    });
+});
+
+app.delete('/deletePiece', (req, res) => {
+  res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(
+    'You need to specify an id parameter!'
+  ));
+});
+
 app.get('*', (_, res) => {
   res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
     'The requested resource was not found. Please check that the endpoint is written correctly.'
