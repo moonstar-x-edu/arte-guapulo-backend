@@ -23,6 +23,26 @@ app.get('/pieces', (req, res) => {
     });
 });
 
+app.get('/piece/:id', (req, res) => {
+  const { id } = req.params;
+
+  piecesRef.doc(id).get()
+    .then((doc) => {
+      if (!doc.exists) {
+        res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND);
+        return;
+      }
+      res.status(HTTP_CODES.OK).send(doc.data());
+    })
+    .catch((error) => {
+      res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
+    });
+});
+
+app.get('/piece', (req, res) => {
+  res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST('You need to specify an id parameter!'));
+});
+
 app.post('/createPiece', (req, res) => {
   const { body } = req;
   const validation = pieceSchema.validate(body);
