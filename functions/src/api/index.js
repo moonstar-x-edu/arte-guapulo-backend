@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { HTTP_CODES, RESPONSES, PATH } = require('../constants');
 const { db } = require('../initializers');
-const pieceSchema = require('../data/schema');
+const { createSchema, updateSchema } = require('../data/schemas');
 
 const app = express();
 app.use(bodyParser.json());
@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
 
 app.post('/create', (req, res) => {
   const { body } = req;
-  const validation = pieceSchema.validate(body, { convert: false });
+  const validation = createSchema.validate(body, { convert: false });
 
   if (validation.error) {
     res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(validation.error));
@@ -97,17 +97,16 @@ app.post('/create', (req, res) => {
 
 app.delete('/delete/:id', (req, res) => {
   const { id } = req.params;
-  const refToRemove = piecesRef.doc(id);
+  const refToDelete = piecesRef.doc(id);
 
-  refToRemove.get()
+  refToDelete.get()
     .then((doc) => {
-      const removed = doc.data();
 
-      refToRemove.delete()
+      refToDelete.delete()
         .then((result) => {
           const data = {
             writeTime: result.writeTime.nanoseconds / 1e9,
-            removed
+            deleted: doc.data()
           };
 
           res.status(HTTP_CODES.OK).send(RESPONSES.OK(data));
@@ -127,6 +126,45 @@ app.delete('/delete', (req, res) => {
   ));
 });
 
+app.put('/update/:id', (req, res) => {
+  const { body, params: { id } } = req;
+  const validation = updateSchema.validate(body, { convert: false });
+
+  if (validation.error) {
+    res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(validation.error));
+    return;
+  }
+
+  const refToUpdate = piecesRef.doc(id);
+
+  refToUpdate.update(body)
+    .then((result) => {
+
+      refToUpdate.get()
+        .then((doc) => {
+          const data = {
+            writeTime: result.writeTime.nanoseconds / 1e9,
+            updated: doc.data()
+          };
+
+          res.status(HTTP_CODES.OK).send(RESPONSES.OK(data));
+        })
+        .catch((error) => {
+          res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
+        });
+    })
+    .catch((error) => {
+      res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(RESPONSES.INTERNAL_SERVER_ERROR(error));
+    });
+});
+
+app.put('/update', (req, res) => {
+  res.status(HTTP_CODES.BAD_REQUEST).send(RESPONSES.BAD_REQUEST(
+    'You need to specify an id parameter!'
+  ));
+});
+
+
 app.get('*', (_, res) => {
   res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
     'The requested resource was not found. Please check that the endpoint is written correctly.'
@@ -140,6 +178,12 @@ app.post('*', (_, res) => {
 });
 
 app.delete('*', (_, res) => {
+  res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
+    'The requested resource was not found. Please check that the endpoint is written correctly.'
+  ));
+});
+
+app.put('*', (_, res) => {
   res.status(HTTP_CODES.NOT_FOUND).send(RESPONSES.NOT_FOUND(
     'The requested resource was not found. Please check that the endpoint is written correctly.'
   ));

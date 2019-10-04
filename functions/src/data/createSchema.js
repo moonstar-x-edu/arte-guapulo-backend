@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi');
 
-const schema = Joi.object({
+const createSchema = Joi.object({
   image: Joi.string()
     .trim()
     .uri()
@@ -35,4 +35,4 @@ const schema = Joi.object({
     .required()
 });
 
-module.exports = schema;
+module.exports = createSchema;
