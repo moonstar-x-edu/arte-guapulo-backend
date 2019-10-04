@@ -6,7 +6,6 @@ const { createSchema, updateSchema } = require('../data/schemas');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 const piecesRef = db.collection(PATH.PIECES);
 
