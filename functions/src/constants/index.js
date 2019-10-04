@@ -19,6 +19,11 @@ const RESPONSES = {
     status: HTTP_CODES.INTERNAL_SERVER_ERROR,
     message: 'Something went wrong when accessing the requested resource.',
     error
+  }),
+  BAD_REQUEST: (error) => ({
+    status: HTTP_CODES.BAD_REQUEST,
+    message: 'Bad request.',
+    error
   })
 };
 
