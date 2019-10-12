@@ -21,12 +21,15 @@ const createSchema = Joi.object({
     .items(Joi.object({
       facebook: Joi.string()
         .required()
+        .allow('')
         .allow(null),
       twitter: Joi.string()
         .required()
+        .allow('')
         .allow(null),
       instagram: Joi.string()
         .required()
+        .allow('')
         .allow(null)
     }))
     .required(),
