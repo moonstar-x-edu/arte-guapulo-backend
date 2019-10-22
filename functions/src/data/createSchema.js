@@ -30,6 +30,10 @@ const createSchema = Joi.object({
       instagram: Joi.string()
         .required()
         .allow('')
+        .allow(null),
+      justName: Joi.string()
+        .required()
+        .allow('')
         .allow(null)
     }))
     .required(),
