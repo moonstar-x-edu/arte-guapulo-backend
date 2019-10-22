@@ -25,6 +25,10 @@ const updateSchema = Joi.object({
       instagram: Joi.string()
         .required()
         .allow('')
+        .allow(null),
+      justName: Joi.string()
+        .required()
+        .allow('')
         .allow(null)
     })),
   tags: Joi.array()

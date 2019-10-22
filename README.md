@@ -62,7 +62,8 @@ GET $API_URL$/api/piece/:id
             {
                 "instagram": null,
                 "twitter": null,
-                "facebook": "facebook.handle"
+                "facebook": "facebook.handle",
+                "justName": null
             }
         ],
         "id": "123",
@@ -101,7 +102,8 @@ GET $API_URL$/api/piece/all
                 {
                     "instagram": null,
                     "twitter": null,
-                    "facebook": "facebook.handle"
+                    "facebook": "facebook.handle",
+                    "justName": null
                 }
             ],
             "id": "123",
@@ -120,7 +122,8 @@ GET $API_URL$/api/piece/all
                 {
                     "instagram": "instagram.handle",
                     "twitter": null,
-                    "facebook": "facebook.handle"
+                    "facebook": "facebook.handle",
+                    "justName": null
                 }
             ],
             "id": "234",
@@ -165,7 +168,14 @@ POST $API_URL$/api/piece/create
         {
             "instagram": "instagram.handle",
             "twitter": null,
-            "facebook": "facebook.handle"
+            "facebook": "facebook.handle",
+            "justName": null
+        },
+        {
+            "instagram": null,
+            "twitter": null,
+            "facebook": null,
+            "justName": "SocialNA"
         }
     ],
     "id": "234",
@@ -196,7 +206,14 @@ POST $API_URL$/api/piece/create
                 {
                     "instagram": "instagram.handle",
                     "twitter": null,
-                    "facebook": "facebook.handle"
+                    "facebook": "facebook.handle",
+                    "justName": null
+                },
+                {
+                    "instagram": null,
+                    "twitter": null,
+                    "facebook": null,
+                    "justName": "SocialNA"
                 }
             ],
             "id": "234",
@@ -242,7 +259,8 @@ PUT $API_URL$/api/piece/update/:id
         {
             "facebook": "new.fb.handle",
             "instagram": null,
-            "twitter": "old.tw.handle"
+            "twitter": "old.tw.handle",
+            "justName": null
         }
     ]
 }
@@ -268,7 +286,8 @@ PUT $API_URL$/api/piece/update/:id
                 {
                     "facebook": "new.fb.handle",
                     "instagram": null,
-                    "twitter": "old.tw.handle"
+                    "twitter": "old.tw.handle",
+                    "justName": null
                 }
             ],
             "tags": [
